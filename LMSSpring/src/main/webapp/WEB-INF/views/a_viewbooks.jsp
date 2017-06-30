@@ -3,9 +3,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-	
-%>
-
 <script>
 function searchBooks(){
 	$.ajax({
@@ -30,7 +27,7 @@ function searchBooks(){
 	<div>
 		<input type="text" name="searchString" id="searchString"
 			placeholder="Author Name" aria-describedby="basic-addon1"
-			oninput="searchBooks()"> >
+			oninput="searchBooks()">
 			
 	</div>
 	<div id="viewArea">
@@ -49,23 +46,29 @@ function searchBooks(){
 	</nav>
 	<table class="table" id="authorsTable">
 		<tr>
-			<th>Author ID</th>
-			<th>Author Name</th>
-			<th>Books by Author</th>
+			<th>No</th>
+			<th>Title</th>
+			<th>Authors</th>
+			<th>Genres</th>
+			<th>Publisher</th>
 			<th>Edit</th>
 			<th>Delete</th>
 		</tr>
-		<gcit:forEach items="${authors}" var="a" varStatus="loop">
+		<gcit:forEach items="${books}" var="b" varStatus="loop">
 			<tr>
 				<td>${loop.count}</td> <!-- you can also use index -->
-				<td>${a.authorName}</td>
-				<td><gcit:forEach var="b" items="${a.books}">
-				'${b.title}'
+				<td>${b.title}</td>
+				<td><gcit:forEach var="a" items="${b.authors}">
+				'${a.authorName}'
 				</gcit:forEach></td>
-				<td><a href="a_editauthor?authorId=${a.authorId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editAuthorModal">Edit!</button></a></td>
+				<td><gcit:forEach var="g" items="${b.genres}">
+				'${g.genreName}'
+				</gcit:forEach></td>
+				<td>${b.publisher.publisherName}</td>
+				<td><a href="a_editbook?bookId=${b.bookId}"><button type="button" class="btn btn-sm btn-primary"
+						data-toggle="modal" data-target="#editBookModal">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
-						onclick="javascript:location.href='deleteAuthor?authorId=${a.authorId}'">Delete!</button></td>
+						onclick="javascript:location.href='deleteBook?bookId=${b.bookId}'">Delete!</button></td>
 			</tr>
 		</gcit:forEach>
 	</table>

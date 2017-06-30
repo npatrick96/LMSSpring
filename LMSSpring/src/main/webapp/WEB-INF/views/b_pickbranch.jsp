@@ -15,7 +15,7 @@
 	if (searchS == null){
 		searchS = "";
 	}
-    Integer branchesCount = adminService.getBranchsCount(searchS);
+    Integer branchesCount = adminService.getBranchesCount(searchS);
 	int pages = 0;
 	if(branchesCount%10> 0){
 		pages = branchesCount/10+1;
@@ -31,7 +31,7 @@
 	if(request.getAttribute("branches")!=null){
 		branches = (List<Branch>)(request.getAttribute("branches"));
 	}else{
-		branches = adminService.getAllBranchs(1, ""); 
+		branches = adminService.getAllBranches(1, ""); 
 	}
 	
 	

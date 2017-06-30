@@ -1,13 +1,7 @@
-<%@page import="java.util.ArrayList"%>
-<%@page import="com.gcit.lms.entity.Branch"%>
-<%@page import="java.util.List"%>
-<%@page import="com.gcit.lms.service.LibrarianService"%>
-
-<%
-	LibrarianService librarianService = new LibrarianService();
-	List<Branch> branches = librarianService.getAllBranches();
-%>
 <%@include file="include.html"%>
+<%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <div class="container"> <!-- jumbotron -->
 	<h4>Below is the list of all library branches.</h4>
@@ -20,25 +14,18 @@
 			<th>Edit</th>
 			<th>View Books</th>
 		</tr>
-		<%
-			for (Branch b : branches) {
-		%>
-		<tr>
-			<td><%=branches.indexOf(b) + 1%></td>
-			<td><%=b.getBranchName()%></td>
-			<td><%=b.getBranchAddress()%></td>
-			<td><button type="button" class="btn btn-sm btn-primary"
-					data-toggle="modal" data-target="#editBranchModal"
-					href="l_editbranch.jsp?branchId=<%=b.getBranchId()%>">Edit!</button></td>
-			<td>
-				<button type="button" class="btn btn-sm btn-success"
-					onclick="javascript:location.href='getBookCopies?branchId=<%=b.getBranchId()%>'">Select!</button>
-				<!-- button will call doGet because GET instead of POST is the default. -->
-			</td>
-		</tr>
-		<%
-			}
-		%>
+		
+		<gcit:forEach items="${branches}" var="br" varStatus="loop">
+			<tr>
+				<td>${loop.count}</td> <!-- you can also use index -->
+				<td>${br.branchName}</td>
+				<td>${br.branchAddress}</td>
+				<td><a href="a_editbranch?branchId=${br.branchId}"><button type="button" class="btn btn-sm btn-primary"
+						data-toggle="modal" data-target="#editAuthorModal">Edit!</button></a></td>
+				<td><button type="button" class="btn btn-sm btn-success"
+						onclick="javascript:location.href='getBookCopies?branchId==${br.branchId}'">Select!</button></td>
+			</tr>
+		</gcit:forEach>
 	</table>
 </div>
 

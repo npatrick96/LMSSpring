@@ -1,40 +1,11 @@
 <%@include file="include.html"%>
-<%@page import="com.gcit.lms.entity.BookLoan"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="com.gcit.lms.entity.Book"%>
-<%@page import="java.util.List"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
+<%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring"
+	uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%
-	AdminService adminService = new AdminService();
-	List<BookLoan> bookloans = new ArrayList<>();
-	String searchS = request.getParameter("searchString");
-	if (searchS == null){
-		searchS = "";
-	}
-    Integer bookloansCount = adminService.getBookLoansCount(searchS);
-	int pages = 0;
-	if(bookloansCount%10> 0){
-		pages = bookloansCount/10+1;
-	}else{
-		pages = bookloansCount/10;
-	}
-	
-	Integer pageNo= (Integer) request.getAttribute("pageNo");
-	if (pageNo == null){
-		pageNo = 1;
-	}
-	
-	if(request.getAttribute("bookloans")!=null){
-		bookloans = (List<BookLoan>)(request.getAttribute("bookloans"));
-	}else{
-		bookloans = adminService.getAllBookLoans(1, ""); 
-	}
-	
-	
-	
-%>
-<div class="container"> <!-- jumbotron class="container" -->
+<div class="container">
+	<!-- jumbotron class="container" -->
 	<h3>Welcome to GCIT Library Management System</h3>
 	<h6>Below is the list of all BookLoans in our Library System.</h6>
 	${message}
@@ -43,15 +14,14 @@
 			<li><a href="#" aria-label="Previous"> <span
 					aria-hidden="true">&laquo;</span>
 			</a></li>
-			<%for(int i=1; i<=pages; i++){ 
-				String empty = ""; %>
-				<li><a href="pageBookLoans?pageNo=<%=i%>&searchString=<%=empty%>"><%=i%></a></li>
-			<%} %>
+			<gcit:forEach var="i" begin="1" end="${pages}">
+				<li><a href="pageBookLoans?pageNo=${i}">${i}</a></li>
+			</gcit:forEach>
 			<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
 		</ul>
 	</nav>
-	<table class="table">
+	<table class="table" id="bookLoansTable">
 		<tr>
 			<th>No</th>
 			<th>Book</th>
@@ -62,52 +32,27 @@
 			<th>Date In</th>
 			<th>Override</th>
 		</tr>
-		<%
-			for (BookLoan p : bookloans) {
-				String dateOut  = p.getDateOut();
-				//System.out.println(dateOut);
-				dateOut = dateOut.replaceAll(" ", "T");
-				//System.out.println(dateOut);
-				String dateout = p.getDateOut();
-				if (dateout != null){
-					dateout = dateout.substring(0, 10);
-				}
-				String datein = p.getDateIn();
-				if (datein != null){
-					datein = datein.substring(0, 10);
-				}
-				String duedate = p.getDueDate();
-				if (duedate != null){
-					duedate = duedate.substring(0, 10);
-				}
-		%>
-		<tr>
-			<td><%=bookloans.indexOf(p) + 1%></td>
-			<td><%=p.getBook().getTitle()%></td>
-			<td><%=p.getBranch().getBranchName()%></td>
-			<td><%=p.getBorrower().getName()%></td>
-			<td><%=dateout %></td>
-			<td><%=duedate %></td>
-			<td><%=datein %></td>
-			<% if (datein==null) {%>
-			<td><button type="button" class="btn btn-sm btn-primary"
-					data-toggle="modal" data-target="#editBookLoanModal"
-					href="a_editbookloan.jsp?bookId=<%=p.getBook().getBookId()%>&branchId=<%=p.getBranch().getBranchId()%>&cardNo=<%=p.getBorrower().getCardNo()%>&dateOut=<%=dateOut%>">Edit!</button></td>
-				<%} else { %>
-				
-				<td><button type="button" class="btn btn-sm btn-primary"
-					data-toggle="modal" data-target="#editBookLoanModal"
-					href="a_editbookloan.jsp?bookId=<%=p.getBook().getBookId()%>&branchId=<%=p.getBranch().getBranchId()%>&cardNo=<%=p.getBorrower().getCardNo()%>&dateOut=<%=dateOut%>" disabled>Edit!</button></td>
-				<%} %>
-		</tr>
-		<%
-			}
-		%>
+		<gcit:forEach items="${bookloans}" var="bl" varStatus="loop">
+			<tr>
+				<td>${loop.count}</td>
+				<td>${bl.book.title}</td>
+				<td>${bl.branch.branchName}</td>
+				<td>${bl.borrower.name}</td>
+				<td>${bl.dateOut}</td>
+				<td>${bl.dueDate}</td>
+				<td>${bl.dateIn}</td>
+				<td><a
+					href="a_editbookloan?bookId=${bl.book.bookId}&branchId=${bl.branch.branchId}&cardNo=${bl.borrower.cardNo}&dateOut=${bl.dateOut}"><button
+							type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+							data-target="#editBookLoanModal">Override!</button></a></td>
+			</tr>
+		</gcit:forEach>
 	</table>
 </div>
 
 <div class="modal fade bs-example-modal-lg" tabindex="-1"
-	id="editBookLoanModal" role="dialog" aria-labelledby="myLargeModalLabel">
+	id="editBookLoanModal" role="dialog"
+	aria-labelledby="myLargeModalLabel">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content"></div>
 	</div>

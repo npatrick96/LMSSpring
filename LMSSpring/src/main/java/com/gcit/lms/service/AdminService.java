@@ -282,7 +282,7 @@ public class AdminService {
 		return br;
 	}
 
-	public List<Branch> getAllBranchs() throws SQLException {
+	public List<Branch> getAllBranches() throws SQLException {
 		List<Branch> branches= brdao.readAllBranchs();
 		for (Branch br: branches){
 			br.setBooks(bdao.readAllBooksByBranchId(br.getBranchId()));
@@ -291,7 +291,7 @@ public class AdminService {
 		return branches;
 	}
 
-	public List<Branch> getAllBranchs(Integer pageNo, String searchString) throws SQLException {
+	public List<Branch> getAllBranches(Integer pageNo, String searchString) throws SQLException {
 		List<Branch> branches = new ArrayList<>();
 		if (searchString != null) {
 			branches = brdao.readAllBranchesByName(pageNo, searchString);
@@ -305,7 +305,7 @@ public class AdminService {
 		return branches;
 	}
 
-	public Integer getBranchsCount(String searchString) throws SQLException {
+	public Integer getBranchesCount(String searchString) throws SQLException {
 		return brdao.getBranchesCount(searchString);
 	}
 
@@ -361,6 +361,10 @@ public class AdminService {
 	public Integer getBorrowersCount(String searchString) throws SQLException {
 		return bodao.getBorrowersCount(searchString);
 	}
+	
+	public Integer getBorrowersCount() throws SQLException {
+		return bodao.getBorrowersCount();
+	}
 
 	@Transactional
 	public void deleteBorrower(Borrower borrower) throws SQLException {
@@ -389,7 +393,12 @@ public class AdminService {
 	}
 
 	public BookLoan getBookLoanByDateOut(String dateout) throws SQLException {
-		return bldao.readBookLoanByDateOut(dateout);
+		BookLoan bookloan =  bldao.readBookLoanByDateOut(dateout);
+		// TODO: talk to PRAMOD about this
+//			bookloan.setBook(bdao.readBookByLoanDateOut(bl.bookloans()));
+//			bookloan.setBranch(brdao.readBranchbyLoanDateOut(bl.getDateOut()));
+//			bookloan.setBorrower(bodao.readBorrowerByLoanDateOut(bl.getDateOut()));
+		return bookloan;
 	}
 
 	public BookLoan getBookLoanBy4Pks(Integer bookId, Integer branchId,
@@ -399,13 +408,6 @@ public class AdminService {
 
 	public List<BookLoan> getAllBookLoans() throws SQLException {
 		return bldao.readAllBookLoans();
-		//TODO: ask pramod about this
-//		List<BookLoan> bookloans = bldao.readAllBookLoans();
-//		for (BookLoan bl: bookloans){
-//			bl.setBranch(brdao.readBranchByBookLoan);
-//			bl.setBorrower(??);
-//			bl.setBook(??);
-//		}return bookloans;
 	}
 
 	public List<BookLoan> getAllBookLoans(Integer pageNo, String searchString)

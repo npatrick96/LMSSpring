@@ -94,8 +94,8 @@ public class BorrowerDAO extends BaseDAO implements ResultSetExtractor<List<Borr
 	}
 	
 	public Borrower readBorrowerByPK(Integer cardNo) throws SQLException{
-		List<Borrower> borrowers = (List<Borrower>) template.query("select * from tbl_borrower where cardNo = ?", new Object[]{cardNo}, this);
-		if(borrowers!=null){
+		List<Borrower> borrowers = template.query("select * from tbl_borrower where cardNo = ?", new Object[]{cardNo}, this);
+		if(borrowers!=null && borrowers.size() > 0){
 			return borrowers.get(0);
 		}
 		return null;

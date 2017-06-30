@@ -1,39 +1,8 @@
 <%@include file="include.html"%>
-<%@page import="com.gcit.lms.entity.Publisher"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="com.gcit.lms.entity.Book"%>
-<%@page import="java.util.List"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
+<%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%
-	AdminService adminService = new AdminService();
-	List<Publisher> publishers = new ArrayList<>();
-	String searchS = request.getParameter("searchString");
-	if (searchS == null){
-		searchS = "";
-	}
-    Integer publishersCount = adminService.getPublishersCount(searchS);
-	int pages = 0;
-	if(publishersCount%10> 0){
-		pages = publishersCount/10+1;
-	}else{
-		pages = publishersCount/10;
-	}
-	
-	Integer pageNo= (Integer) request.getAttribute("pageNo");
-	if (pageNo == null){
-		pageNo = 1;
-	}
-	
-	if(request.getAttribute("publishers")!=null){
-		publishers = (List<Publisher>)(request.getAttribute("publishers"));
-	}else{
-		publishers = adminService.getAllPublishers(1, ""); 
-	}
-	
-	
-	
-%>
 <div class="container"> <!-- jumbotron -->
 	<h3>Welcome to GCIT Library Management System</h3>
 	<h6>Below is the list of all Publishers in our Library System.</h6>
@@ -43,15 +12,14 @@
 			<li><a href="#" aria-label="Previous"> <span
 					aria-hidden="true">&laquo;</span>
 			</a></li>
-			<%for(int i=1; i<=pages; i++){ 
-				String empty = ""; %>
-				<li><a href="pagePublishers?pageNo=<%=i%>&searchString=<%=empty%>"><%=i%></a></li>
-			<%} %>
+			<gcit:forEach var="i" begin="1" end="${pages}">
+				<li><a href="pagePublishers?pageNo=${i}">${i}</a></li>
+			</gcit:forEach>
 			<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
 		</ul>
 	</nav>
-	<table class="table">
+	<table class="table" id="authorsTable">
 		<tr>
 			<th>No</th>
 			<th>Name</th>
@@ -61,31 +29,21 @@
 			<th>Edit</th>
 			<th>Delete</th>
 		</tr>
-		<%
-			for (Publisher p : publishers) {
-		%>
-		<tr>
-			<td><%=publishers.indexOf(p) + 1%></td>
-			<td><%=p.getPublisherName()%></td>
-			<td><%=p.getPublisherAddress()%></td>
-			<td><%=p.getPublisherPhone()%></td>
-			<td>
-				<%
-					for (Book b : p.getBooks()) {
-							out.println("'"+b.getTitle() + "'");
-						}
-				%>
-			</td>
-			<td><button type="button" class="btn btn-sm btn-primary"
-					data-toggle="modal" data-target="#editPublisherModal"
-					href="a_editpublisher.jsp?publisherId=<%=p.getPublisherId()%>">Edit!</button></td>
-			<td><button type="button" class="btn btn-sm btn-danger"
-					onclick="javascript:location.href='deletePublisher?publisherId=<%=p.getPublisherId()%>'">Delete!</button></td>
-					
-		</tr>
-		<%
-			}
-		%>
+		<gcit:forEach items="${publishers}" var="p" varStatus="loop">
+			<tr>
+				<td>${loop.count}</td> <!-- you can also use index -->
+				<td>${p.publisherName}</td>
+				<td>${p.publisherAddress}</td>
+				<td>${p.publisherPhone}</td>
+				<td><gcit:forEach var="b" items="${p.books}">
+				'${b.title}'
+				</gcit:forEach></td>
+				<td><a href="a_editpublisher?publisherId=${p.publisherId}"><button type="button" class="btn btn-sm btn-primary"
+						data-toggle="modal" data-target="#editPublisherModal">Edit!</button></a></td>
+				<td><button type="button" class="btn btn-sm btn-danger"
+						onclick="javascript:location.href='deletePublisher?publisherId=${p.publisherId}'">Delete!</button></td>
+			</tr>
+		</gcit:forEach>
 	</table>
 </div>
 
