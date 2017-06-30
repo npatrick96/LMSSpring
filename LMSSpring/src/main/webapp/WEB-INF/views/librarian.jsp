@@ -21,7 +21,7 @@
 				<td>${br.branchName}</td>
 				<td>${br.branchAddress}</td>
 				<td><a href="a_editbranch?branchId=${br.branchId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editAuthorModal">Edit!</button></a></td>
+						data-toggle="modal" data-target="#editBranchModal">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-success"
 						onclick="javascript:location.href='getBookCopies?branchId==${br.branchId}'">Select!</button></td>
 			</tr>

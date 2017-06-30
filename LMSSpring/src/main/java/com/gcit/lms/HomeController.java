@@ -66,8 +66,7 @@ public class HomeController {
 	@RequestMapping(value = "/a_addauthor", method = RequestMethod.GET)
 	public String addAuthor(Model model) throws SQLException {
 		Integer authorId = Integer.parseInt(model.asMap().get("authorId").toString());
-		AdminService service = new AdminService();
-		Author author = service.getAuthorByPK(authorId);
+		Author author = adminService.getAuthorByPK(authorId);
 		//TODO: add books
 		adminService.saveAuthor(author);
 		return "a_addauthor";
