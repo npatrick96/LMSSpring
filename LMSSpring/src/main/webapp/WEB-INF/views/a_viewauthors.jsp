@@ -8,9 +8,7 @@ function searchAuthors(){
 	$.ajax({
 		url: "searchAuthors",
 		data:{
-			searchString: $('#searchString').val(),
-			pageNo: $('#pageNo').val(),
-			pages: $('#pages').val()
+			searchString: $('#searchString').val() //  ,pageNo: $('#pageNo').val()
 		}
 	}).done(function (data){
 		console.log(data);
@@ -29,9 +27,9 @@ function searchAuthors(){
 	<div>
 		<input type="text" name="searchString" id="searchString"
 			placeholder="Author Name" aria-describedby="basic-addon1"
-			oninput="searchAuthors()"> <!-- value=%searchS%>  -->
-			<!-- <input type="hidden" name="pageNo" id= "pageNo" value=%pageNo%>> -->
-			<!-- <input type="hidden" name="pages" id= "pages" value=%pages%> -->
+			oninput="searchAuthors()" value="${searchString}"> 
+			<input type="hidden" name="pageNo" id= "pageNo" value="${pageNo}">
+			<input type="hidden" name="pages" id= "pages" value="${pages}"> 
 	</div>
 	
 	<div id="viewArea">
@@ -42,7 +40,7 @@ function searchAuthors(){
 					aria-hidden="true">&laquo;</span>
 			</a></li>
 			<gcit:forEach var="i" begin="1" end="${pages}">
-				<li><a href="pageAuthors?pageNo=${i}">${i}</a></li>
+				<li><a href="a_viewauthors?pageNo=${i}&searchString=${searchString}">${i}</a></li>
 			</gcit:forEach>
 			<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
@@ -64,10 +62,9 @@ function searchAuthors(){
 				<td><gcit:forEach var="b" items="${a.books}">
 				'${b.title}'
 				</gcit:forEach></td>
-				<td><a href="a_editauthor?authorId=${a.authorId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editAuthorModal">Edit!</button></a></td>
+				<td><a href="a_editauthor?authorId=${a.authorId}&searchString=${searchString}&pageNo=${pageNo}" data-toggle="modal" data-target="#editAuthorModal"><button type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
-						onclick="javascript:location.href='deleteAuthor?authorId=${a.authorId}'">Delete!</button></td>
+						onclick="javascript:location.href='deleteAuthor?authorId=${a.authorId}&searchString=${searchString}&pageNo=${pageNo}'">Delete!</button></td>
 			</tr>
 		</gcit:forEach>
 	</table>

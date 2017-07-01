@@ -3,8 +3,8 @@
 	
 	<h4>Hello Administrator, Please pick your action!</h4>
 
-	<a href="a_addauthor.jsp">Add Author</a>
+	<a href="a_addauthor">Add Author</a>
 	<br> 
-	<a href="a_viewauthors.jsp">View All Authors</a>
+	<a href="a_viewauthors">View All Authors</a>
 	<br>
 </div>

@@ -54,13 +54,26 @@ public class AuthorDAO extends BaseDAO implements ResultSetExtractor<List<Author
 	
 	public List<Author> readAllAuthors(Integer pageNo) throws SQLException{
 		setPageNo(pageNo);
-		return  template.query("select * from tbl_author", this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return  template.query("select * from tbl_author" + " LIMIT " + index + " , " + getPageSize(), this);
+		}else{
+			return  template.query("select * from tbl_author", this);	
+		}
+		
 	}
 	
 	public List<Author> readAllAuthorsByName(Integer pageNo, String searchString) throws SQLException{
 		searchString = "%"+searchString+"%";
 		setPageNo(pageNo);
-		return template.query("select * from tbl_author where authorName like ?", new Object[]{searchString}, this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return template.query("select * from tbl_author where authorName like ?" + " LIMIT " + index + " , " + getPageSize(), new Object[]{searchString}, this);
+		}else{
+			return template.query("select * from tbl_author where authorName like ?", new Object[]{searchString}, this);
+		}
+		
+		
 	}
 	
 	public Integer getAuthorsCount() throws SQLException {

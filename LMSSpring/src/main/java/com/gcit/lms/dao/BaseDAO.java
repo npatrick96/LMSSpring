@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public abstract class BaseDAO {
+public abstract class BaseDAO { // TEST
 	
 	//Constructor 
 	//@Qualifier(value="Oracle") would get the oracle configuration template 

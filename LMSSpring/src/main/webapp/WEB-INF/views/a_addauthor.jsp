@@ -1,12 +1,7 @@
-
-<%@page import="com.gcit.lms.entity.Book"%>
-<%@page import="java.util.List"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
 <%@include file="include.html"%>
-<%
-	AdminService service = new AdminService();
-	List<Book> books = service.getAllBooks();
-%>
+<%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <script>
 	$(function() {
@@ -40,13 +35,9 @@
 
 				<select name="bookId"  multiple="multiple" size="5" data-placeholder="Choose Books..." style="width: 250px;" class ="chosen-select">
 					
-					<%
-						for (Book b : books) {
-					%>
-					<option value="<%=b.getBookId()%>"><%=b.getTitle()%></option>
-					<%
-						}
-					%>
+					<gcit:forEach items="${books}" var="b" varStatus="loop">
+						<option value="${b.bookId}">${b.title}</option>
+					</gcit:forEach>
 				</select>
 			</div>
 		</div>

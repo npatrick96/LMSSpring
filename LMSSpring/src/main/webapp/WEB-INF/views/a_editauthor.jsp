@@ -1,11 +1,3 @@
-<%@page import="com.gcit.lms.entity.Author"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
-<%
-	Integer authorId = Integer.parseInt(request.getParameter("authorId"));
-	AdminService service = new AdminService();
-	Author author = service.getAuthorByPK(authorId);
-%>
-
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal"
 		aria-label="Close">
@@ -17,8 +9,10 @@
 	<div class="modal-body">
 
 		Edit Author Name: <input type="text" name="authorName"
-			value="<%=author.getAuthorName()%>"><br /> 
-			<input type="hidden" name="authorId" value=<%=author.getAuthorId()%>>
+			value="${author.authorName}"><br /> 
+			<input type="hidden" name="authorId" value="${author.authorId}">
+			<input type="hidden" name="pageNo" value="${pageNo}">
+			<input type="hidden" name="searchString" value="${searchString}">
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
