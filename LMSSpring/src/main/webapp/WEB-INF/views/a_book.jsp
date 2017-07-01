@@ -1,7 +1,7 @@
 <%@include file="include.html"%>
 
 <div class="jumbotron container">
-<h4>Welcome to the Admin Author Services.</h4>
+<h4>Welcome to the Admin Book Services.</h4>
 <p>Hello, please pick an action!</p>
 
 <a href="a_addbook">Add Book</a><br/>

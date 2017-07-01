@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gcit.lms.entity.Author;
 import com.gcit.lms.entity.Book;
+import com.gcit.lms.entity.Genre;
+import com.gcit.lms.entity.Publisher;
 import com.gcit.lms.service.AdminService;
 import com.gcit.lms.service.BorrowerService;
 import com.gcit.lms.service.LibrarianService;
@@ -59,6 +61,93 @@ public class HomeController {
 	public String borrower() {
 		return "borrower";
 	}
+	
+	//================================================================================
+    // Books pages
+    //================================================================================
+	
+	@RequestMapping(value = "/a_book", method = RequestMethod.GET)
+	public String a_book() {
+		return "a_book";
+	}
+	
+	@RequestMapping(value = "/a_addbook", method = RequestMethod.GET)
+	public String a_addBook(Model model) throws SQLException {
+		List<Author> authors = adminService.getAllAuthors();
+		List<Genre> genres = adminService.getAllGenres();
+		List<Publisher> publishers = adminService.getAllPublishers();
+		model.addAttribute("authors", authors);
+		model.addAttribute("genres", genres);
+		model.addAttribute("publishers", publishers);
+		return "a_addbook";
+	}
+	
+	@RequestMapping(value = "/addBook", method = RequestMethod.POST)
+	public String addBook(Model model, @RequestParam("title") String title, @RequestParam("authorId") String[] authorIds,
+			@RequestParam("genreId") String[] genreIds, @RequestParam("publisherId") String publisherId) throws SQLException {
+		Book book = new Book();
+		book.setTitle(title);
+		if (authorIds != null && authorIds.length > 0) {
+			ArrayList<Author> authors = new ArrayList<Author>();
+			for (String a : authorIds) {
+				Author author = adminService.getAuthorByPK(Integer.parseInt(a));
+				authors.add(author);
+			}
+			book.setAuthors(authors);
+		}
+		if (genreIds != null && genreIds.length > 0) {
+			ArrayList<Genre> genres = new ArrayList<Genre>();
+			for (String g : genreIds) {
+				Genre genre = adminService.getGenreByPK(Integer.parseInt(g));
+				genres.add(genre);
+			}
+			book.setGenres(genres);
+		}
+		if (publisherId != null) {
+			Publisher publisher = adminService.getPublisherByPK(Integer.parseInt(publisherId));
+			book.setPublisher(publisher);
+		}
+		adminService.saveBook(book);
+		Integer booksCount = adminService.getBooksCount("");
+		Integer pages = getPagesNumber(booksCount);
+		model.addAttribute("pages", pages);
+		model.addAttribute("books", adminService.getAllBooks(1, null));
+		return "a_viewbooks";
+	}
+	
+//	@RequestMapping(value = "/a_viewbooks", method = RequestMethod.GET)
+//	public String a_viewBooks(Model model) throws SQLException { 
+//		//GENERIC FOR VIEW PAGES WITH NO SEARCH OR PAGINATION
+//		model.addAttribute("books", adminService.getAllBooks(1, null));
+//		Integer booksCount = adminService.getBooksCount("");
+//		Integer pages = getPagesNumber(booksCount);
+//		model.addAttribute("pages", pages);
+//		return "a_viewbooks";
+//		}
+	
+	//
+	@RequestMapping(value = "/a_viewbooks", method = RequestMethod.GET)
+	public String a_viewBooks(Model model, Integer pageNo, String searchString) throws SQLException { 
+		Integer booksCount = adminService.getBooksCount("");
+		List<Book> books = new ArrayList<>();
+		if (pageNo != null && searchString != null){
+			books = adminService.getAllBooks(pageNo, searchString);
+			booksCount = adminService.getBooksCount(searchString); 
+		}else if(searchString != null){
+			books = adminService.getAllBooks(1, searchString);
+			booksCount = adminService.getAuthorsCount(searchString); 
+		}else{
+			books = adminService.getAllBooks(1, "");
+			booksCount = adminService.getAuthorsCount(""); 
+		}
+		Integer pages = getPagesNumber(booksCount);
+		model.addAttribute("books", books);
+		model.addAttribute("pages", pages);
+		model.addAttribute("pageNo", pageNo);
+		model.addAttribute("searchString", searchString);
+		return "a_viewbooks";
+	}
+	
 	
 	//================================================================================
     // Authors pages
@@ -204,19 +293,6 @@ public class HomeController {
 		model.addAttribute("pageNo", pageNo);
 		model.addAttribute("searchString", searchString);
 		return "a_viewauthors";
-	}
-	
-	//================================================================================
-    // Books pages
-    //================================================================================
-	
-	@RequestMapping(value = "/a_viewbooks", method = RequestMethod.GET)
-	public String a_viewBooks(Model model) throws SQLException {
-		model.addAttribute("books", adminService.getAllBooks(1, null));
-		Integer bookCount = adminService.getBooksCount("");
-		Integer pages = getPagesNumber(bookCount);
-		model.addAttribute("pages", pages);
-		return "a_viewbooks";
 	}
 	
 	//================================================================================

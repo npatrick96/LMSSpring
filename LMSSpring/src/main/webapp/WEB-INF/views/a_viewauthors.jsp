@@ -11,9 +11,7 @@ function searchAuthors(){
 			searchString: $('#searchString').val() //  ,pageNo: $('#pageNo').val()
 		}
 	}).done(function (data){
-		console.log(data);
 		$('#viewArea').html(data)
-		//alert(data);
 	})
 }
 </script>

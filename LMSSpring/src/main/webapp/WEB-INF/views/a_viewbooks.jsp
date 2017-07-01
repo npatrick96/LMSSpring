@@ -8,14 +8,12 @@ function searchBooks(){
 	$.ajax({
 		url: "searchBooks",
 		data:{
-			searchString: $('#searchString').val(),
-			pageNo: $('#pageNo').val(),
-			pages: $('#pages').val()
+			searchString: $('#searchString').val()
+			//pageNo: $('#pageNo').val(),
+			//pages: $('#pages').val()
 		}
 	}).done(function (data){
-		console.log(data);
 		$('#viewArea').html(data)
-		//alert(data);
 	})
 }
 </script>
@@ -38,7 +36,7 @@ function searchBooks(){
 					aria-hidden="true">&laquo;</span>
 			</a></li>
 			<gcit:forEach var="i" begin="1" end="${pages}">
-				<li><a href="pageAuthors?pageNo=${i}">${i}</a></li>
+				<li><a href="a_viewbooks?pageNo=${i}">${i}</a></li>
 			</gcit:forEach>
 			<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
@@ -65,8 +63,8 @@ function searchBooks(){
 				'${g.genreName}'
 				</gcit:forEach></td>
 				<td>${b.publisher.publisherName}</td>
-				<td><a href="a_editbook?bookId=${b.bookId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editBookModal">Edit!</button></a></td>
+				<td><a href="a_editbook?bookId=${b.bookId}" data-toggle="modal" data-target="#editBookModal"><button 
+				type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
 						onclick="javascript:location.href='deleteBook?bookId=${b.bookId}'">Delete!</button></td>
 			</tr>
