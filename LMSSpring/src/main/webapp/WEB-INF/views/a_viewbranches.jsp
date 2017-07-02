@@ -13,7 +13,7 @@
 					aria-hidden="true">&laquo;</span>
 			</a></li>
 			<gcit:forEach var="i" begin="1" end="${pages}">
-				<li><a href="pageBranches?pageNo=${i}">${i}</a></li>
+				<li><a href="a_viewbranches?pageNo=${i}">${i}</a></li>
 			</gcit:forEach>
 			<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>

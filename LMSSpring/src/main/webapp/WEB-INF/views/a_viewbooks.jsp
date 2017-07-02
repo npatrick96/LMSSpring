@@ -25,8 +25,9 @@ function searchBooks(){
 	<div>
 		<input type="text" name="searchString" id="searchString"
 			placeholder="Author Name" aria-describedby="basic-addon1"
-			oninput="searchBooks()">
-			
+			oninput="searchBooks()"  value="${searchString}">
+			<input type="hidden" name="pageNo" id= "pageNo" value="${pageNo}">
+			<input type="hidden" name="pages" id= "pages" value="${pages}"> 
 	</div>
 	<div id="viewArea">
 
@@ -63,8 +64,7 @@ function searchBooks(){
 				'${g.genreName}'
 				</gcit:forEach></td>
 				<td>${b.publisher.publisherName}</td>
-				<td><a href="a_editbook?bookId=${b.bookId}" data-toggle="modal" data-target="#editBookModal"><button 
-				type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
+				<td><a href="a_editbook?bookId=${b.bookId}" data-toggle="modal" data-target="#editBookModal"><button type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
 						onclick="javascript:location.href='deleteBook?bookId=${b.bookId}'">Delete!</button></td>
 			</tr>

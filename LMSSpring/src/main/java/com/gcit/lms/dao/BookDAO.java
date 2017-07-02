@@ -108,13 +108,23 @@ public class BookDAO extends BaseDAO  implements ResultSetExtractor<List<Book>>{
 	
 	public List<Book> readAllBooks(Integer pageNo) throws SQLException{
 		setPageNo(pageNo);
-		return template.query("select * from tbl_book", this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return  template.query("select * from tbl_book" + " LIMIT " + index + " , " + getPageSize(), this);
+		}else{
+			return  template.query("select * from tbl_book", this);	
+		}
 	}
 	
 	public List<Book> readAllBooksByName(Integer pageNo, String searchString) throws SQLException{
 		searchString = "%"+searchString+"%";
 		setPageNo(pageNo);
-		return template.query("select * from tbl_book where title like ?", new Object[]{searchString}, this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return template.query("select * from tbl_book where title like ?" + " LIMIT " + index + " , " + getPageSize(), new Object[]{searchString}, this);
+		}else{
+			return template.query("select * from tbl_book where title like ?", new Object[]{searchString}, this);
+		}
 	}
 
 	@Override

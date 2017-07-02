@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gcit.lms.entity.Author;
 import com.gcit.lms.entity.Book;
+import com.gcit.lms.entity.BookLoan;
+import com.gcit.lms.entity.Borrower;
+import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.Genre;
 import com.gcit.lms.entity.Publisher;
 import com.gcit.lms.service.AdminService;
@@ -119,7 +122,9 @@ public class HomeController {
 	
 	@RequestMapping(value = "/a_editbook", method = RequestMethod.GET)
 	public String a_editBook(Model model, 
-			@RequestParam("bookId") Integer bookId, Integer pageNo, String searchString) throws SQLException {
+			@RequestParam("bookId") Integer bookId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
 		Book book = adminService.getBookByPK(bookId);
 		model.addAttribute("pageNo", pageNo);
 		model.addAttribute("searchString", searchString);
@@ -136,7 +141,12 @@ public class HomeController {
 			@RequestParam(value="authorId", required=false) String[] authorIds,
 			@RequestParam(value="genreId", required=false) String[] genreIds, 
 			@RequestParam(value="publisherId", required=false) String publisherId, 
-			Integer pageNo, String searchString) throws SQLException {
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
 		
 		Book book = adminService.getBookByPK(bookId);
 		book.setTitle(title);
@@ -188,10 +198,16 @@ public class HomeController {
 	
 	@RequestMapping(value = "/deleteBook", method = RequestMethod.GET)
 	public String deleteBook(Model model, 
-			@RequestParam("bookId") Integer bookId, Integer pageNo, String searchString) throws SQLException {
+			@RequestParam("bookId") Integer bookId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
 		Book book = adminService.getBookByPK(bookId);
 		adminService.deleteBook(book);
-		System.out.println(searchString + searchString.length());
+		//System.out.println(searchString + searchString.length());
 		model.addAttribute("books", adminService.getAllBooks(pageNo, searchString));
 		Integer booksCount = adminService.getBooksCount(searchString);
 		Integer pages = getPagesNumber(booksCount);
@@ -204,8 +220,10 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/a_viewbooks", method = RequestMethod.GET)
-	public String a_viewBooks(Model model, Integer pageNo, String searchString) throws SQLException { 
-		Integer booksCount = adminService.getBooksCount("");
+	public String a_viewBooks(Model model, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException { 
+		Integer booksCount = 0;
 		List<Book> books = new ArrayList<>();
 		if (searchString == null){
 			searchString = "";}
@@ -217,7 +235,7 @@ public class HomeController {
 		model.addAttribute("books", books);
 		model.addAttribute("pages", pages);
 		model.addAttribute("pageNo", pageNo);
-		System.out.println(searchString + "searchString");
+		//System.out.println(searchString + "searchString");
 		model.addAttribute("searchString", searchString);
 		return "a_viewbooks";
 	}
@@ -258,11 +276,10 @@ public class HomeController {
 			}else{
 				strBuf.append("");
 			}
-			strBuf.append("</td><td><button type='button' class='btn btn-sm btn-primary'data-toggle='modal' data-target='#editBookModal' href='a_editbook.jsp?bookId="
-					+ bk.getBookId() + "'>Edit!</button></td>");
+			strBuf.append("</td><td><button type='button' class='btn btn-sm btn-primary'data-toggle='modal' data-target='#editBookModal' href='a_editbook?bookId="
+					+ bk.getBookId() +"'>Edit!</button></td>");
 			strBuf.append("<td><button type='button' class='btn btn-sm btn-danger' onclick='javascript:location.href='deleteBook?bookId="
-					+ bk.getBookId()
-					+ "''>Delete!</button></td></tr>");
+					+ bk.getBookId()+"'>Delete!</button></td></tr>");
 		}
 		strBuf.append("</table>");
 		response.getWriter().write(strBuf.toString());
@@ -310,7 +327,9 @@ public class HomeController {
 	
 	@RequestMapping(value = "/a_editauthor", method = RequestMethod.GET)
 	public String a_editAuthor(Model model, 
-			@RequestParam("authorId") Integer authorId, Integer pageNo, String searchString) throws SQLException {
+			@RequestParam("authorId") Integer authorId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
 		Author author = adminService.getAuthorByPK(authorId);
 		model.addAttribute("pageNo", pageNo);
 		model.addAttribute("searchString", searchString);
@@ -321,7 +340,13 @@ public class HomeController {
 	@RequestMapping(value = "/editAuthor", method = RequestMethod.POST)
 	public String editAuthor(Model model, 
 			@RequestParam("authorId") Integer authorId,
-			@RequestParam("authorName") String authorName, Integer pageNo, String searchString) throws SQLException {
+			@RequestParam("authorName") String authorName, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
 		Author author = adminService.getAuthorByPK(authorId);
 		author.setAuthorName(authorName);
 		adminService.saveAuthor(author);
@@ -336,7 +361,13 @@ public class HomeController {
 	
 	@RequestMapping(value = "/deleteAuthor", method = RequestMethod.GET)
 	public String deleteAuthor(Model model, 
-			@RequestParam("authorId") Integer authorId, Integer pageNo, String searchString) throws SQLException {
+			@RequestParam("authorId") Integer authorId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
 		Author author = adminService.getAuthorByPK(authorId);
 		adminService.deleteAuthor(author);
 		model.addAttribute("authors", adminService.getAllAuthors(pageNo, searchString));
@@ -350,7 +381,9 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/a_viewauthors", method = RequestMethod.GET)
-	public String a_viewAuthors(Model model, Integer pageNo, String searchString) throws SQLException {
+	public String a_viewAuthors(Model model, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
 		List<Author> authors = new ArrayList<>();
 		Integer authorsCount = 0;
 		if (searchString == null){
@@ -397,7 +430,7 @@ public class HomeController {
 			for (Book b : a.getBooks()) {
 				strBuf.append(" '"+b.getTitle() + "' ");
 			}
-			strBuf.append("</td><td><button type='button' class='btn btn-sm btn-primary'data-toggle='modal' data-target='#editAuthorModal' href='a_editauthor.jsp?authorId="
+			strBuf.append("</td><td><button type='button' class='btn btn-sm btn-primary'data-toggle='modal' data-target='#editAuthorModal' href='a_editauthor?authorId="
 					+ a.getAuthorId() + "'>Edit!</button></td>");
 			strBuf.append("<td><button type='button' class='btn btn-sm btn-danger' onclick='javascript:location.href='deleteAuthor?authorId="
 					+ a.getAuthorId()
@@ -411,6 +444,37 @@ public class HomeController {
     // Borrowers pages
     //================================================================================
 	
+	@RequestMapping(value = "/a_borrower", method = RequestMethod.GET)
+	public String a_borrower() {
+		return "a_borrower";
+	}
+	
+	@RequestMapping(value = "/a_addborrower", method = RequestMethod.GET)
+	public String a_addBorrower(Model model) throws SQLException {
+		return "a_addborrower";
+	}
+	
+	@RequestMapping(value = "/addBorrower", method = RequestMethod.POST)
+	public String addBorrower(Model model, 
+			@RequestParam("borrowerName") String borrowerName,
+			@RequestParam(value = "borrowerAddress", required=false) String borrowerAddress,
+			@RequestParam(value = "borrowerPhone", required=false) String borrowerPhone) throws SQLException {
+		Borrower borrower = new Borrower();
+		borrower.setName(borrowerName);
+		if (borrowerAddress != null && borrowerAddress.length()>0){
+			borrower.setAddress(borrowerAddress);
+		}else{}
+		if (borrowerPhone != null && borrowerPhone.length() > 0){
+			borrower.setPhone(borrowerPhone);
+		}else{}
+		adminService.saveBorrower(borrower);
+		Integer borrowersCount = adminService.getBorrowersCount("");
+		Integer pages = getPagesNumber(borrowersCount);
+		model.addAttribute("pages", pages);
+		model.addAttribute("borrowers", adminService.getAllBorrowers());
+		return "a_viewborrowers";
+	}
+	
 	@RequestMapping(value = "/a_viewborrowers", method = RequestMethod.GET)
 	public String a_viewBorrowers(Model model) throws SQLException {
 		model.addAttribute("borrowers", adminService.getAllBorrowers(1, null));
@@ -420,22 +484,38 @@ public class HomeController {
 		return "a_viewborrowers";
 	}
 	
-	//================================================================================
-    // Loans pages
-    //================================================================================
 	
-	@RequestMapping(value = "/a_viewboookloans", method = RequestMethod.GET)
-	public String a_viewBookLoans(Model model) throws SQLException {
-		model.addAttribute("bookloans", adminService.getAllBookLoans(1, null));
-		Integer loansCount = adminService.getBookLoansCount("");
-		Integer pages = getPagesNumber(loansCount);
-		model.addAttribute("pages", pages);
-		return "a_viewbookloans";
-	}
 	
 	//================================================================================
     // Branches pages
     //================================================================================
+	
+	@RequestMapping(value = "/a_branch", method = RequestMethod.GET)
+	public String a_branch() {
+		return "a_branch";
+	}
+	
+	@RequestMapping(value = "/a_addbranch", method = RequestMethod.GET)
+	public String a_addBranch(Model model) throws SQLException {
+		return "a_addbranch";
+	}
+	
+	@RequestMapping(value = "/addBranch", method = RequestMethod.POST)
+	public String addBranch(Model model, 
+			@RequestParam("branchName") String branchName,
+			@RequestParam(value = "branchAddress", required=false) String branchAddress) throws SQLException {
+		Branch branch = new Branch();
+		branch.setBranchName(branchName);
+		if (branchAddress != null && branchAddress.length()>0){
+			branch.setBranchAddress(branchAddress);
+		}else{}
+		adminService.saveBranch(branch);
+		Integer branchesCount = adminService.getBranchesCount("");
+		Integer pages = getPagesNumber(branchesCount);
+		model.addAttribute("pages", pages);
+		model.addAttribute("branches", adminService.getAllBranches());
+		return "a_viewbranches";
+	}
 	
 	@RequestMapping(value = "/a_viewbranches", method = RequestMethod.GET)
 	public String a_viewBranches(Model model) throws SQLException {
@@ -450,6 +530,37 @@ public class HomeController {
     // Publishers pages
     //================================================================================
 	
+	@RequestMapping(value = "/a_publisher", method = RequestMethod.GET)
+	public String a_publisher() {
+		return "a_publisher";
+	}
+	
+	@RequestMapping(value = "/a_addpublisher", method = RequestMethod.GET)
+	public String a_addPublisher() {
+		return "a_addpublisher";
+	}
+	
+	@RequestMapping(value = "/addPublisher", method = RequestMethod.POST)
+	public String addPublisher(Model model, 
+			@RequestParam("publisherName") String publisherName,
+			@RequestParam(value = "publisherAddress", required=false) String publisherAddress,
+			@RequestParam(value = "publisherPhone", required=false) String publisherPhone) throws SQLException {
+		Publisher publisher = new Publisher();
+		publisher.setPublisherName(publisherName);
+		if (publisherAddress != null && publisherAddress.length()>0){
+			publisher.setPublisherAddress(publisherAddress);
+		}else{}
+		if (publisherPhone != null && publisherPhone.length()>0){
+			publisher.setPublisherPhone(publisherPhone);
+		}else{}
+		adminService.savePublisher(publisher);
+		Integer publishersCount = adminService.getPublishersCount("");
+		Integer pages = getPagesNumber(publishersCount);
+		model.addAttribute("pages", pages);
+		model.addAttribute("publishers", adminService.getAllPublishers());
+		return "a_viewpublishers";
+	}
+	
 	@RequestMapping(value = "/a_viewpublishers", method = RequestMethod.GET)
 	public String a_viewPublishers(Model model) throws SQLException {
 		model.addAttribute("publishers", adminService.getAllPublishers(1, null));
@@ -460,6 +571,51 @@ public class HomeController {
 	}
 	
 	//================================================================================
+    // Loans pages
+    //================================================================================
+	
+	@RequestMapping(value = "/a_editbookloan", method = RequestMethod.GET)
+	public String a_editBookLoan(Model model, 
+			@RequestParam("bookId") Integer bookId, 
+			@RequestParam("cardNo") Integer cardNo, 
+			@RequestParam("branchId") Integer branchId,
+			@RequestParam("dateOut") String dateOut) throws SQLException {
+		dateOut = dateOut.replaceAll("T", " ");
+		BookLoan bookloan = adminService.getBookLoanBy4Pks(bookId, branchId, cardNo, dateOut);
+		String displayDueDate = "";
+		if (bookloan.getDueDate() != null){
+			displayDueDate = bookloan.getDueDate().substring(0, 10);
+		}
+		System.out.println(displayDueDate); 
+		model.addAttribute("oldDueDate", displayDueDate);
+		model.addAttribute("bl", bookloan);
+		return "a_editbookloan";
+	}
+	
+	@RequestMapping(value = "/editBookLoan", method = RequestMethod.POST)
+	public String editBookLoan(Model model, 
+			@RequestParam("bookId") Integer bookId, 
+			@RequestParam("cardNo") Integer cardNo, 
+			@RequestParam("branchId") Integer branchId,
+			@RequestParam("dateOut") String dateOut,
+			@RequestParam(value = "newDueDate", required = false) String newDueDate) throws SQLException {
+		BookLoan bookloan = adminService.getBookLoanBy4Pks(bookId, branchId, cardNo, dateOut);
+		if (newDueDate != null && newDueDate.length() > 0){
+			adminService.overrideDueDate(bookloan, newDueDate);
+		}
+		return a_viewBookLoans(model);
+	}	
+	
+	@RequestMapping(value = "/a_viewbookloans", method = RequestMethod.GET)
+	public String a_viewBookLoans(Model model) throws SQLException {
+		model.addAttribute("bookloans", adminService.getAllBookLoans(1, null));
+		Integer loansCount = adminService.getBookLoansCount("");
+		Integer pages = getPagesNumber(loansCount);
+		model.addAttribute("pages", pages);
+		return "a_viewbookloans";
+	}
+	
+	//================================================================================
     // Helpers Methods
     //================================================================================
 	
@@ -467,12 +623,9 @@ public class HomeController {
 		int pages = 0;
 		if (entityCount % 10 > 0) {
 			pages = entityCount / 10 + 1;
-		} else if (entityCount > 1) {
-			pages = 1;
 		} else {
-			pages = 0;
+			pages = entityCount / 10;
 		}
 		return pages;
 	}
-	
 }

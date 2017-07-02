@@ -136,7 +136,7 @@ public class AdminService {
 	}
 
 	public Integer getBooksCount(String searchString) throws SQLException {
-		System.out.println(bdao.getBooksCount(searchString));
+		//System.out.println(bdao.getBooksCount(searchString));
 		return bdao.getBooksCount(searchString);
 	}
 
@@ -259,19 +259,18 @@ public class AdminService {
 			pdao.updatePublisherName(publisher);
 			if (publisher.getPublisherAddress() != null) {
 				pdao.updatePublisherAddress(publisher);
-				if (publisher.getPublisherPhone() != null) {
-					pdao.updatePublisherPhone(publisher);
-				}
-			} else {
-				int pubId = pdao.addPublisherWithID(publisher);
-				if (publisher.getPublisherAddress() != null) {
-					pdao.updatePublisherAddress(pubId,
-							publisher.getPublisherAddress());
-				}
-				if (publisher.getPublisherPhone() != null) {
-					pdao.updatePublisherPhone(pubId,
-							publisher.getPublisherPhone());
-				}
+			}
+
+			if (publisher.getPublisherPhone() != null) {
+				pdao.updatePublisherPhone(publisher);
+			}
+		} else {
+			int pubId = pdao.addPublisherWithID(publisher);
+			if (publisher.getPublisherAddress() != null) {
+				pdao.updatePublisherAddress(pubId, publisher.getPublisherAddress());
+			}
+			if (publisher.getPublisherPhone() != null) {
+				pdao.updatePublisherPhone(pubId, publisher.getPublisherPhone());
 			}
 		}
 	}

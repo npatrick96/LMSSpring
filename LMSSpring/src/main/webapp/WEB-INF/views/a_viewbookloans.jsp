@@ -1,7 +1,6 @@
 <%@include file="include.html"%>
 <%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring"
-	uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <div class="container">
@@ -15,7 +14,7 @@
 					aria-hidden="true">&laquo;</span>
 			</a></li>
 			<gcit:forEach var="i" begin="1" end="${pages}">
-				<li><a href="pageBookLoans?pageNo=${i}">${i}</a></li>
+				<li><a href="a_viewbookloans?pageNo=${i}">${i}</a></li>
 			</gcit:forEach>
 			<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
@@ -41,10 +40,20 @@
 				<td>${bl.dateOut}</td>
 				<td>${bl.dueDate}</td>
 				<td>${bl.dateIn}</td>
-				<td><a
-					href="a_editbookloan?bookId=${bl.book.bookId}&branchId=${bl.branch.branchId}&cardNo=${bl.borrower.cardNo}&dateOut=${bl.dateOut}"><button
-							type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-							data-target="#editBookLoanModal">Override!</button></a></td>
+				<td>
+				<gcit:choose>
+				<gcit:when test="${empty bl.dateIn}">
+					<a data-toggle="modal" data-target="#editBookLoanModal" 
+					href="a_editbookloan?bookId=${bl.book.bookId}&branchId=${bl.branch.branchId}&cardNo=${bl.borrower.cardNo}&dateOut=${fn:replace(bl.dateOut,' ', 'T')}"><button
+							type="button" class="btn btn-sm btn-danger">Override!</button></a>
+				</gcit:when>
+				<gcit:otherwise>
+					<a data-toggle="modal" data-target="#editBookLoanModal" 
+					href="a_editbookloan?bookId=${bl.book.bookId}&branchId=${bl.branch.branchId}&cardNo=${bl.borrower.cardNo}&dateOut=${fn:replace(bl.dateOut,' ', 'T')}"><button
+							type="button" class="btn btn-sm btn-danger" disabled>Override!</button></a>
+				</gcit:otherwise>
+				</gcit:choose>
+				</td>
 			</tr>
 		</gcit:forEach>
 	</table>

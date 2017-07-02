@@ -60,7 +60,6 @@ public class AuthorDAO extends BaseDAO implements ResultSetExtractor<List<Author
 		}else{
 			return  template.query("select * from tbl_author", this);	
 		}
-		
 	}
 	
 	public List<Author> readAllAuthorsByName(Integer pageNo, String searchString) throws SQLException{

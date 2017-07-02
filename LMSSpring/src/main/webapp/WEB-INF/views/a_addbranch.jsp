@@ -1,9 +1,7 @@
-
-
-<%@page import="java.util.List"%>
 <%@include file="include.html"%>
-
-
+<%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <div class="container jumbotron">
 
