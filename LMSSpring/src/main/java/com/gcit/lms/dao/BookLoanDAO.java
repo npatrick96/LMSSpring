@@ -122,14 +122,24 @@ public class BookLoanDAO extends BaseDAO implements ResultSetExtractor<List<Book
 	
 	public List<BookLoan> readAllBookLoans(Integer pageNo) throws SQLException{
 		setPageNo(pageNo);
-		return template.query("select * from tbl_book_loans", this);
+		if ( pageNo > 0){
+			int index = (getPageNo() - 1) * 10;
+			return template.query("select * from tbl_book_loans"+" LIMIT " + index + " , " + getPageSize(), this);
+		}else{
+			return template.query("select * from tbl_book_loans", this);
+		}
 	}
 	
 	
 	public List<BookLoan> readAllBookLoansByDateOut(Integer pageNo, String searchString) throws SQLException{
 		searchString = "%"+searchString+"%";
 		setPageNo(pageNo);
+		if (pageNo > 0){
+			int index = (getPageNo() - 1) * 10;
+			return template.query("select * from tbl_book_loans where dateOut like ?"+" LIMIT " + index + " , " + getPageSize(), new Object[]{searchString}, this);
+		}else{
 		return template.query("select * from tbl_book_loans where dateOut like ?", new Object[]{searchString}, this);
+		}
 	}
 	
 	public List<BookLoan> readAllBookLoans() throws SQLException{

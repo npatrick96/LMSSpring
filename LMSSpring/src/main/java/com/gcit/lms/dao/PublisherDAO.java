@@ -82,13 +82,24 @@ public class PublisherDAO extends BaseDAO implements ResultSetExtractor<List<Pub
 	
 	public List<Publisher> readAllPublishers(Integer pageNo) throws SQLException{
 		setPageNo(pageNo);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return (List<Publisher>) template.query("select * from tbl_publisher"+" LIMIT " + index + " , " + getPageSize(), this);
+		}else{
 		return (List<Publisher>) template.query("select * from tbl_publisher", this);
+		}
 	}
 	
 	public List<Publisher> readAllPublishersByName(Integer pageNo, String searchString) throws SQLException{
 		searchString = "%"+searchString+"%";
 		setPageNo(pageNo);
-		return (List<Publisher>) template.query("select * from tbl_publisher where publisherName like ?", new Object[]{searchString}, this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return (List<Publisher>) template.query("select * from tbl_publisher where publisherName like ?" +  " LIMIT " + index + " , " + getPageSize(), new Object[]{searchString}, this);
+		}else{
+			return (List<Publisher>) template.query("select * from tbl_publisher where publisherName like ?", new Object[]{searchString}, this);
+		}
+		
 	}
 	
 	public List<Publisher> readAllPublishersByPublisherName(String searchString) throws SQLException{

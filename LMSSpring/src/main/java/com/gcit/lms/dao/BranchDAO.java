@@ -63,13 +63,23 @@ public class BranchDAO extends BaseDAO implements ResultSetExtractor<List<Branch
 	
 	public List<Branch> readAllBranches(Integer pageNo) throws SQLException{
 		setPageNo(pageNo);
-		return  template.query("select * from tbl_library_branch", this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return  template.query("select * from tbl_library_branch" + " LIMIT " + index + " , " + getPageSize(), this);
+		}else{
+			return  template.query("select * from tbl_library_branch", this);
+		}
 	}
 	
 	public List<Branch> readAllBranchesByName(Integer pageNo, String searchString) throws SQLException{
 		searchString = "%"+searchString+"%";
 		setPageNo(pageNo);
-		return (List<Branch>) template.query("select * from tbl_library_branch where branchName like ?", new Object[]{searchString}, this);
+		if (pageNo>0){
+			int index = (getPageNo() - 1) * 10;
+			return (List<Branch>) template.query("select * from tbl_library_branch where branchName like ?"+" LIMIT " + index + " , " + getPageSize(), new Object[]{searchString}, this);
+		}else{
+			return (List<Branch>) template.query("select * from tbl_library_branch where branchName like ?", new Object[]{searchString}, this);
+		}
 	}
 	
 	public void deleteBranch(Branch branch) throws SQLException{

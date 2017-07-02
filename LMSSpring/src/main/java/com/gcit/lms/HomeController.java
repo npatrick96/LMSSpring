@@ -476,8 +476,11 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/a_viewborrowers", method = RequestMethod.GET)
-	public String a_viewBorrowers(Model model) throws SQLException {
-		model.addAttribute("borrowers", adminService.getAllBorrowers(1, null));
+	public String a_viewBorrowers(Model model,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo) throws SQLException {
+		if(pageNo == null){
+			pageNo = 1;}
+		model.addAttribute("borrowers", adminService.getAllBorrowers(pageNo, null));
 		Integer borrowersCount = adminService.getBorrowersCount("");
 		Integer pages = getPagesNumber(borrowersCount);
 		model.addAttribute("pages", pages);
@@ -518,8 +521,11 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/a_viewbranches", method = RequestMethod.GET)
-	public String a_viewBranches(Model model) throws SQLException {
-		model.addAttribute("branches", adminService.getAllBranches(1, null));
+	public String a_viewBranches(Model model,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo) throws SQLException {
+		if(pageNo == null){
+			pageNo = 1;}
+		model.addAttribute("branches", adminService.getAllBranches(pageNo, null));
 		Integer branchesCount = adminService.getBranchesCount("");
 		Integer pages = getPagesNumber(branchesCount);
 		model.addAttribute("pages", pages);
@@ -562,10 +568,15 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/a_viewpublishers", method = RequestMethod.GET)
-	public String a_viewPublishers(Model model) throws SQLException {
-		model.addAttribute("publishers", adminService.getAllPublishers(1, null));
+	public String a_viewPublishers(Model model,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo) throws SQLException {
+		if(pageNo == null){
+			pageNo = 1;}
+		model.addAttribute("publishers", adminService.getAllPublishers(pageNo, null));
 		Integer publishersCount = adminService.getPublishersCount("");
+		//System.out.println(publishersCount);
 		Integer pages = getPagesNumber(publishersCount);
+		//System.out.println(pages);
 		model.addAttribute("pages", pages);
 		return "a_viewpublishers";
 	}
@@ -603,12 +614,15 @@ public class HomeController {
 		if (newDueDate != null && newDueDate.length() > 0){
 			adminService.overrideDueDate(bookloan, newDueDate);
 		}
-		return a_viewBookLoans(model);
+		return a_viewBookLoans(model, 1);
 	}	
 	
 	@RequestMapping(value = "/a_viewbookloans", method = RequestMethod.GET)
-	public String a_viewBookLoans(Model model) throws SQLException {
-		model.addAttribute("bookloans", adminService.getAllBookLoans(1, null));
+	public String a_viewBookLoans(Model model, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo) throws SQLException {
+		if(pageNo == null){
+			pageNo = 1;}
+		model.addAttribute("bookloans", adminService.getAllBookLoans(pageNo, null));
 		Integer loansCount = adminService.getBookLoansCount("");
 		Integer pages = getPagesNumber(loansCount);
 		model.addAttribute("pages", pages);
