@@ -36,10 +36,9 @@
 				<td>${bo.name}</td>
 				<td>${bo.address}</td>
 				<td>${bo.phone}</td>
-				<td><a href="a_editborrower?cardNo=${bo.cardNo}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editBorrowerModal">Edit!</button></a></td>
+				<td><a data-toggle="modal" data-target="#editBorrowerModal" href="a_editborrower?cardNo=${bo.cardNo}"><button type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
-						onclick="javascript:location.href='deleteBorrower?cardNo=${b.cardNo}'">Delete!</button></td>
+						onclick="javascript:location.href='deleteBorrower?cardNo=${bo.cardNo}'">Delete!</button></td>
 			</tr>
 		</gcit:forEach>
 	</table>

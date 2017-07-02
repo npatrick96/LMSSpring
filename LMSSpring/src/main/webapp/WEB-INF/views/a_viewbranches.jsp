@@ -32,8 +32,9 @@
 				<td>${loop.count}</td> <!-- you can also use index -->
 				<td>${br.branchName}</td>
 				<td>${br.branchAddress}</td>
-				<td><a href="a_editbranch?branchId=${br.branchId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editAuthorModal">Edit!</button></a></td>
+				<td><a data-toggle="modal" data-target="#editBranchModal"
+					href="a_editbranch?branchId=${br.branchId}"><button
+							type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
 						onclick="javascript:location.href='deleteBranch?branchId=${br.branchId}'">Delete!</button></td>
 			</tr>

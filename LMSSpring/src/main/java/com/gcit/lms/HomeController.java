@@ -475,6 +475,56 @@ public class HomeController {
 		return "a_viewborrowers";
 	}
 	
+	@RequestMapping(value = "/a_editborrower", method = RequestMethod.GET)
+	public String a_editBorrower(Model model, 
+			@RequestParam("cardNo") Integer cardNo, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		Borrower borrower = adminService.getBorrowerByPK(cardNo);
+		model.addAttribute("pageNo", pageNo);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("borrower", borrower);
+		return "a_editborrower";
+	}
+	
+	@RequestMapping(value = "/editBorrower", method = RequestMethod.POST)
+	public String editBorrower(Model model, 
+			@RequestParam("cardNo") Integer cardNo,
+			@RequestParam("borrowerName") String borrowerName, 
+			@RequestParam(value = "borrowerAddress", required = false) String borrowerAddress,
+			@RequestParam(value = "borrowerPhone", required = false) String borrowerPhone,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
+		Borrower borrower = adminService.getBorrowerByPK(cardNo);
+		borrower.setName(borrowerName);
+		if (borrowerAddress != null && borrowerAddress.length() > 0){
+			borrower.setAddress(borrowerAddress);
+		}
+		if (borrowerPhone != null && borrowerPhone.length() > 0){
+			borrower.setPhone(borrowerPhone);
+		}
+		adminService.saveBorrower(borrower);
+		return a_viewBorrowers(model,pageNo);
+	}	
+	
+	@RequestMapping(value = "/deleteBorrower", method = RequestMethod.GET)
+	public String deleteBorrower(Model model, 
+			@RequestParam("cardNo") Integer cardNo, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
+		Borrower borrower = adminService.getBorrowerByPK(cardNo);
+		adminService.deleteBorrower(borrower);
+		return a_viewBorrowers(model,pageNo);
+	}
+	
 	@RequestMapping(value = "/a_viewborrowers", method = RequestMethod.GET)
 	public String a_viewBorrowers(Model model,
 			@RequestParam(value = "pageNo", required = false) Integer pageNo) throws SQLException {
@@ -518,6 +568,52 @@ public class HomeController {
 		model.addAttribute("pages", pages);
 		model.addAttribute("branches", adminService.getAllBranches());
 		return "a_viewbranches";
+	}
+	
+	@RequestMapping(value = "/a_editbranch", method = RequestMethod.GET)
+	public String a_editBranch(Model model, 
+			@RequestParam("branchId") Integer branchId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		Branch branch = adminService.getBranchByPK(branchId);
+		model.addAttribute("pageNo", pageNo);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("branch", branch);
+		return "a_editbranch";
+	}
+	
+	@RequestMapping(value = "/editBranch", method = RequestMethod.POST)
+	public String editBranch(Model model, 
+			@RequestParam("branchId") Integer branchId,
+			@RequestParam("branchName") String branchName, 
+			@RequestParam(value = "branchAddress", required = false) String branchAddress,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
+		Branch branch = adminService.getBranchByPK(branchId);
+		branch.setBranchName(branchName);
+		if (branchAddress != null && branchAddress.length() > 0){
+			branch.setBranchAddress(branchAddress);
+		}
+		adminService.saveBranch(branch);
+		return a_viewBranches(model,pageNo);
+	}	
+	
+	@RequestMapping(value = "/deleteBranch", method = RequestMethod.GET)
+	public String deleteBranch(Model model, 
+			@RequestParam("branchId") Integer branchId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
+		Branch branch = adminService.getBranchByPK(branchId);
+		adminService.deleteBranch(branch);
+		return a_viewBranches(model,pageNo);
 	}
 	
 	@RequestMapping(value = "/a_viewbranches", method = RequestMethod.GET)
@@ -565,6 +661,56 @@ public class HomeController {
 		model.addAttribute("pages", pages);
 		model.addAttribute("publishers", adminService.getAllPublishers());
 		return "a_viewpublishers";
+	}
+	
+	@RequestMapping(value = "/a_editpublisher", method = RequestMethod.GET)
+	public String a_editPublisher(Model model, 
+			@RequestParam("publisherId") Integer publisherId, 
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		Publisher publisher = adminService.getPublisherByPK(publisherId);
+		model.addAttribute("pageNo", pageNo);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("publisher", publisher);
+		return "a_editpublisher";
+	}
+	
+	@RequestMapping(value = "/editPublisher", method = RequestMethod.POST)
+	public String editPublisher(Model model, 
+			@RequestParam("publisherId") Integer publisherId,
+			@RequestParam("publisherName") String publisherName, 
+			@RequestParam(value = "publisherAddress", required = false) String publisherAddress,
+			@RequestParam(value = "publisherPhone", required = false) String publisherPhone,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
+		Publisher publisher = adminService.getPublisherByPK(publisherId);
+		publisher.setPublisherName(publisherName);
+		if (publisherAddress != null && publisherAddress.length() > 0){
+			publisher.setPublisherAddress(publisherAddress);
+		}
+		if (publisherPhone != null && publisherPhone.length() > 0){
+			publisher.setPublisherPhone(publisherPhone);
+		}
+		adminService.savePublisher(publisher);
+		return a_viewPublishers(model,pageNo);
+	}	
+	
+	@RequestMapping(value = "/deletePublisher", method = RequestMethod.GET)
+	public String deletePublisher(Model model, 
+			@RequestParam("publisherId") Integer publisherId,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo, 
+			@RequestParam(value = "searchString", required = false) String searchString) throws SQLException {
+		if (searchString == null){
+			searchString = "";}
+		if(pageNo == null){
+			pageNo = 1;}
+		Publisher publisher = adminService.getPublisherByPK(publisherId);
+		adminService.deletePublisher(publisher);
+		return a_viewPublishers(model,pageNo);
 	}
 	
 	@RequestMapping(value = "/a_viewpublishers", method = RequestMethod.GET)

@@ -31,15 +31,17 @@
 		</tr>
 		<gcit:forEach items="${publishers}" var="p" varStatus="loop">
 			<tr>
-				<td>${loop.count}</td> <!-- you can also use index -->
+				<td>${loop.count}</td>
+				<!-- you can also use index -->
 				<td>${p.publisherName}</td>
 				<td>${p.publisherAddress}</td>
 				<td>${p.publisherPhone}</td>
 				<td><gcit:forEach var="b" items="${p.books}">
 				'${b.title}'
 				</gcit:forEach></td>
-				<td><a href="a_editpublisher?publisherId=${p.publisherId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editPublisherModal">Edit!</button></a></td>
+				<td><a data-toggle="modal" data-target="#editPublisherModal"
+					href="a_editpublisher?publisherId=${p.publisherId}"><button
+							type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-danger"
 						onclick="javascript:location.href='deletePublisher?publisherId=${p.publisherId}'">Delete!</button></td>
 			</tr>

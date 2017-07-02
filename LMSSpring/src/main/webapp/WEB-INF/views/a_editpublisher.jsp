@@ -1,11 +1,3 @@
-<%@page import="com.gcit.lms.entity.Publisher"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
-<%
-	Integer pubId = Integer.parseInt(request.getParameter("publisherId"));
-	AdminService service = new AdminService();
-	Publisher publisher = service.getPublisherByPK(pubId);
-%>
-
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal"
 		aria-label="Close">
@@ -17,22 +9,22 @@
 	<div class="modal-body">
 		<div class = "row">
 		Edit Publisher Title: <input type="text" name="publisherName"
-			value="<%=publisher.getPublisherName()%>"><br /> 
-			<input type="hidden" name="publisherId" value=<%=publisher.getPublisherId()%>>
+			value="${publisher.publisherName}"><br /> 
+			<input type="hidden" name="publisherId" value="${publisher.publisherId}">
 			</div>
 			
 			
 		<div class = "row">
 		Edit Publisher Address: <input type="text" name="publisherAddress"
-			value="<%=publisher.getPublisherAddress()%>"><br /> 
-			<input type="hidden" name="publisherId" value=<%=publisher.getPublisherId()%>>
+			value="${publisher.publisherAddress}"><br /> 
+			<input type="hidden" name="publisherId" value="${publisher.publisherId}">
 			</div>
 			
 			
 		<div class = "row">
 		Edit Publisher Phone: <input type="text" name="publisherPhone"
-			value="<%=publisher.getPublisherPhone()%>"><br /> 
-			<input type="hidden" name="publisherId" value=<%=publisher.getPublisherId()%>>
+			value="${publisher.publisherPhone}"><br /> 
+			<input type="hidden" name="publisherId" value="${publisher.publisherId}">
 			</div>
 	</div>
 	<div class="modal-footer">

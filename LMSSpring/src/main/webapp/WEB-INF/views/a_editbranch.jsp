@@ -1,10 +1,3 @@
-<%@page import="com.gcit.lms.entity.Branch"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
-<%
-	Integer branchId = Integer.parseInt(request.getParameter("branchId"));
-	AdminService service = new AdminService();
-	Branch branch = service.getBranchByPK(branchId);
-%>
 
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal"
@@ -16,16 +9,16 @@
 <form action="editBranch" method="post">
 	<div class="modal-body">
 		<div class = "row">
-		Edit Branch Title: <input type="text" name="branchName"
-			value="<%=branch.getBranchName()%>"><br /> 
-			<input type="hidden" name="branchId" value=<%=branch.getBranchId()%>>
+		Edit Branch Name: <input type="text" name="branchName"
+			value="${branch.branchName}"><br /> 
+			<input type="hidden" name="branchId" value="${branch.branchId}">
 			</div>
 			
 			
 		<div class = "row">
 		Edit Branch Address: <input type="text" name="branchAddress"
-			value="<%=branch.getBranchAddress()%>"><br /> 
-			<input type="hidden" name="branchId" value=<%=branch.getBranchId()%>>
+			value="${branch.branchAddress}"><br /> 
+			<input type="hidden" name="branchId" value="${branch.branchId}">
 			</div>
 			
 	</div>
