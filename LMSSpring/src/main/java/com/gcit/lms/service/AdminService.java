@@ -136,6 +136,7 @@ public class AdminService {
 	}
 
 	public Integer getBooksCount(String searchString) throws SQLException {
+		System.out.println(bdao.getBooksCount(searchString));
 		return bdao.getBooksCount(searchString);
 	}
 

@@ -1,20 +1,6 @@
-<%@page import="com.gcit.lms.entity.Book"%>
-<%@page import="com.gcit.lms.entity.Author"%>
-<%@page import="com.gcit.lms.service.AdminService"%>
-<%@page import="com.gcit.lms.entity.Genre"%>
-<%@page import="com.gcit.lms.entity.Publisher"%>
-<%@page import="java.util.List"%>
-<script src="./template_files/chosen.jquery.js"></script>
-<link href="./template_files/bootstrap-chosen.css" rel="stylesheet">
-<%
-	Integer bookId = Integer.parseInt(request.getParameter("bookId"));
-	AdminService service = new AdminService();
-	Book book = service.getBookByPK(bookId);
-	
-	List<Author> authors = service.getAllAuthors();
-	List<Publisher> publishers = service.getAllPublishers();
-	List<Genre> genres = service.getAllGenres();
-%>
+<%@ taglib prefix="gcit" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <script>
 	$(function() {
@@ -45,65 +31,65 @@
 	<div class="col-md-12">
 		<div class="row">
 			<span style="width: 250px;">  Edit Book Title</span><input type="text" name="title"
-				value="<%=book.getTitle()%>" style="width: 250px;"><br /> <input
-				type="hidden" name="bookId" value=<%=book.getBookId()%>>
+				value="${book.title}" style="width: 250px;"><br /> <input
+				type="hidden" name="bookId" value="${book.bookId}">
 		</div>
 		<div class="row">
 			<span style="width: 250px;">  Edit Book Authors</span><select name="authorId" multiple="multiple"
 				data-placeholder="Choose Authors..."
 				class="chosen-select" style="width: 250px;">
-				<%
-						for (Author a :authors) {
-							if (book.getAuthors().contains(a)){
-					%>
-				<option value="<%=a.getAuthorId()%>" selected="selected"><%=a.getAuthorName()%></option>
-				<%
-							}else{
-					%>
-				<option value="<%=a.getAuthorId()%>"><%=a.getAuthorName()%></option>
-				<%
-							}
-						}
-					%>
+					<gcit:forEach items="${authors}" var="a">
+						<gcit:set var="contains" value="false" />
+					    <gcit:forEach items="${book.authors}" var="ab">
+					    	<gcit:if test="${a eq ab}">
+    							<gcit:set var="contains" value="true" />
+ 				 			</gcit:if>
+					    </gcit:forEach>
+					    <gcit:if test="${contains eq true}">
+					    	<option value="${a.authorId}" selected="selected">${a.authorName}</option>
+					    </gcit:if>
+					    <gcit:if test="${contains eq false}">
+					    	<option value="${a.authorId}">${a.authorName}</option>
+					    </gcit:if>
+					</gcit:forEach>
 			</select>
 		</div>
+		
 		<div class="row">
 			<span style="width: 250px;">  Edit Book Genres</span><select name="genreId" multiple="multiple"
 				style="width: 250px;" data-placeholder="Choose Genres..."
 				class="chosen-select">
-				<%
-						for (Genre a :genres) {
-							if (book.getGenres().contains(a)){
-					%>
-				<option value="<%=a.getGenreId()%>" selected="selected"><%=a.getGenreName()%></option>
-				<%
-							}else{
-					%>
-				<option value="<%=a.getGenreId()%>"><%=a.getGenreName()%></option>
-				<%
-							}
-						}
-					%>
+				<gcit:forEach items="${genres}" var="g" varStatus="loop">
+					<gcit:set var="contains" value="false" />
+					    <gcit:forEach items="${book.genres}" var="gb">
+					    	<gcit:if test="${g eq gb}">
+    							<gcit:set var="contains" value="true" />
+ 				 			</gcit:if>
+					    </gcit:forEach>
+					    <gcit:if test="${contains eq true}">
+					    	<option value="${g.genreId}" selected="selected">${g.genreName}</option>
+					    </gcit:if>
+					    <gcit:if test="${contains eq false}">
+					    	<option value="${g.genreId}">${g.genreName}</option>
+					    </gcit:if>
+				</gcit:forEach>
 			</select>
 		</div>
+		
 		<div class="row">
-			<span style="width: 250px;">  Edit Book Publisher</span><select id="pubSelect" name="publisherId" style="width: 250px;"
+			<span style="width: 250px;">  Edit Book Publisher</span><select name="publisherId" style="width: 250px;"
 				data-placeholder="Choose Publisher ..." class="chosen-select"> <!--  class="chosen-select-deselect" -->
 				<option selected="selected" value=0>Choose Publisher ...</option> <!-- disabled -->
-				
-				<%
-						for (Publisher a :publishers) {
-							if ( book.getPublisher()!=null && book.getPublisher().equals(a)){
-					%>
-				<option value="<%=a.getPublisherId()%>" selected="selected"><%=a.getPublisherName()%></option>
-				<%
-							}else{
-					%>
-				<option value="<%=a.getPublisherId()%>"><%=a.getPublisherName()%></option>
-				<%
-						}
-					}
-					%>
+				<gcit:forEach items="${publishers}" var="p" varStatus="loop">
+					<gcit:choose>
+						<gcit:when test="${p eq book.publisher}">
+					    	<option value="${p.publisherId}" selected="selected">${p.publisherName}</option>
+					    </gcit:when>
+					    <gcit:otherwise>
+							<option value="${p.publisherId}">${p.publisherName}</option>
+						</gcit:otherwise>
+					</gcit:choose>
+				</gcit:forEach>
 			</select>
 		</div>
 	</div>

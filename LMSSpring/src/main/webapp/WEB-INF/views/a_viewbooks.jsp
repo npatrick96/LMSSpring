@@ -42,7 +42,7 @@ function searchBooks(){
 			</a></li>
 		</ul>
 	</nav>
-	<table class="table" id="authorsTable">
+	<table class="table" id="booksTable">
 		<tr>
 			<th>No</th>
 			<th>Title</th>
