@@ -14,16 +14,17 @@
 			<th>Edit</th>
 			<th>View Books</th>
 		</tr>
-		
+
 		<gcit:forEach items="${branches}" var="br" varStatus="loop">
 			<tr>
-				<td>${loop.count}</td> <!-- you can also use index -->
+				<td>${loop.count}</td>
 				<td>${br.branchName}</td>
 				<td>${br.branchAddress}</td>
-				<td><a href="a_editbranch?branchId=${br.branchId}"><button type="button" class="btn btn-sm btn-primary"
-						data-toggle="modal" data-target="#editBranchModal">Edit!</button></a></td>
+				<td><a data-toggle="modal" data-target="#editBranchModal"
+					href="l_editbranch?branchId=${br.branchId}"><button
+							type="button" class="btn btn-sm btn-primary">Edit!</button></a></td>
 				<td><button type="button" class="btn btn-sm btn-success"
-						onclick="javascript:location.href='getBookCopies?branchId==${br.branchId}'">Select!</button></td>
+						onclick="javascript:location.href='getBookCopies?branchId=${br.branchId}'">Select!</button></td>
 			</tr>
 		</gcit:forEach>
 	</table>

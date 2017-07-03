@@ -67,6 +67,84 @@ public class HomeController {
 	}
 	
 	//================================================================================
+    // LIBRARIAN SERVICES
+    //================================================================================
+	
+	@RequestMapping(value = "/l_editbranch", method = RequestMethod.GET)
+	public String l_editBranch(Model model, 
+			@RequestParam("branchId") Integer branchId) throws SQLException {
+		Branch branch = adminService.getBranchByPK(branchId);
+		model.addAttribute("branch", branch);
+		return "l_editbranch";
+	}
+	
+	@RequestMapping(value = "/editBranchLib", method = RequestMethod.POST)
+	public String editBranchLib(Model model, 
+			@RequestParam("branchId") Integer branchId,
+			@RequestParam("branchName") String branchName, 
+			@RequestParam(value = "branchAddress", required = false) String branchAddress) throws SQLException {
+		
+		Branch branch = adminService.getBranchByPK(branchId);
+		branch.setBranchName(branchName);
+		if (branchAddress != null && branchAddress.length() > 0){
+			branch.setBranchAddress(branchAddress);
+		}
+		adminService.saveBranch(branch);
+		return librarian(model);
+	}
+	
+	
+	@RequestMapping(value = "/getBookCopies", method = RequestMethod.GET)
+	public String getBookCopies(Model model, 
+			@RequestParam("branchId") Integer branchId) throws SQLException {
+		Branch branch = librarianService.getBranchByPk(branchId);
+		model.addAttribute("branchId", branchId);
+		model.addAttribute("branch", branch);
+		return l_viewBookCopies(model, branchId);
+	}
+	
+	@RequestMapping(value = "/l_viewbookcopies", method = RequestMethod.GET)
+	public String l_viewBookCopies(Model model, 
+			@RequestParam("branchId") Integer branchId) throws SQLException {
+		Branch branch = librarianService.getBranchByPk(branchId);
+		model.addAttribute("branch", branch);
+		List<BookCopy> copies = librarianService.getAllBookCopiesOwnedBy(branch);
+		model.addAttribute("copies", copies);
+		return "l_viewbookcopies";
+	}
+	
+	@RequestMapping(value = "/l_editbookcopy", method = RequestMethod.GET)
+	public String l_editbookcopy(Model model, 
+			@RequestParam("branchId") Integer branchId, 
+			@RequestParam("bookId") Integer bookId,
+			@RequestParam("noOfCopies") Integer noOfCopies) throws SQLException {
+		model.addAttribute("branchId", branchId);
+		model.addAttribute("bookId", bookId);
+		model.addAttribute("oldNoOfCopies", noOfCopies);
+		return "l_editbookcopy";
+	}
+	
+	@RequestMapping(value = "/editBookCopy", method = RequestMethod.POST)
+	public String editBookCopy(Model model, @RequestParam("branchId") Integer branchId, @RequestParam("bookId") Integer bookId,
+			@RequestParam("noOfCopies") Integer noOfCopies) throws SQLException {
+		BookCopy copy = librarianService.getBookCopyByPks(branchId, bookId);
+		copy.setNoOfCopies(noOfCopies);
+		librarianService.saveBookCopy(copy);
+		return l_viewBookCopies(model, branchId);
+	}
+	
+	@RequestMapping(value = "/deleteBookCopy", method = RequestMethod.GET)
+	public String deleteBookCopy(Model model, 
+			@RequestParam("branchId") Integer branchId, 
+			@RequestParam("bookId") Integer bookId) throws SQLException {
+		
+		librarianService.deleteBookCopy( bookId, branchId);
+		String message  = "Deletion completed successfully";
+		model.addAttribute("message", message);
+		return l_viewBookCopies(model, branchId);
+	}
+	
+	//================================================================================
     // BORROWER SERVICES
     //================================================================================
 	
@@ -164,10 +242,6 @@ public class HomeController {
 		model.addAttribute("borrower",borrower);
 		return "b_viewbookloans";
 	}
-	
-	//================================================================================
-    // LIBRARIAN SERVICES
-    //================================================================================
 	
 	//================================================================================
     // BELOW HERE IS ADMIN TERRITORY
